@@ -1,0 +1,32 @@
+# ==============================================================
+# SEGURIDAD Y PUBLICACIÓN LIMPIA - CB05 PROCESOS DE CIBERSEGURIDAD
+# ==============================================================
+
+# 1. Documentación original del curso (slides universitarias y material institucional)
+docs/
+*.pdf
+*.xlsx
+*.xls
+*.docx
+*.pptx
+
+# 2. Entorno de desarrollo, dependencias y scripts de prueba internos
+node_modules/
+scratch/
+package-lock.json
+
+# 3. Logs y temporales
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 4. Configuración del editor y del sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 5. Directorios de agentes y caché local
+.gemini/
+.system_generated/
