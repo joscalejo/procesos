@@ -84,14 +84,26 @@
   }
 
   function applyTheme(isDark) {
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    const btn = document.getElementById('themeToggle');
+
     if (isDark) {
       document.documentElement.classList.add('dark');
-      const label = document.getElementById('themeLabel');
+      if (icon) icon.textContent = '☀️';
       if (label) label.textContent = 'Modo Claro';
+      if (btn) {
+        btn.setAttribute('title', 'Cambiar a Modo Claro');
+        btn.setAttribute('aria-label', 'Cambiar a Modo Claro');
+      }
     } else {
       document.documentElement.classList.remove('dark');
-      const label = document.getElementById('themeLabel');
+      if (icon) icon.textContent = '🌙';
       if (label) label.textContent = 'Modo Oscuro';
+      if (btn) {
+        btn.setAttribute('title', 'Cambiar a Modo Oscuro');
+        btn.setAttribute('aria-label', 'Cambiar a Modo Oscuro');
+      }
     }
   }
 
@@ -101,11 +113,15 @@
     views.forEach(v => v.classList.add('hidden'));
 
     const navButtons = document.querySelectorAll('.nav-btn');
-    navButtons.forEach(b => b.classList.remove('bg-executive-200', 'dark:bg-executive-800', 'text-executive-900', 'dark:text-white', 'font-bold'));
+    navButtons.forEach(b => {
+      b.classList.remove('bg-blue-600', 'text-white', 'dark:bg-blue-600', 'dark:text-white', 'shadow-sm', 'font-bold');
+      b.classList.add('text-executive-600', 'dark:text-executive-300');
+    });
 
     const activeBtn = document.getElementById(`nav-${viewId}`);
     if (activeBtn) {
-      activeBtn.classList.add('bg-executive-200', 'dark:bg-executive-800', 'text-executive-900', 'dark:text-white', 'font-bold');
+      activeBtn.classList.remove('text-executive-600', 'dark:text-executive-300');
+      activeBtn.classList.add('bg-blue-600', 'text-white', 'dark:bg-blue-600', 'dark:text-white', 'shadow-sm', 'font-bold');
     }
 
     const target = document.getElementById(viewId);
@@ -123,17 +139,6 @@
     if (viewId === 'view-detective') renderDetective();
     if (viewId === 'view-raci') renderRaciModule();
     if (viewId === 'view-reference') renderReference();
-  };
-
-  // CONTROL DE MENÚ MÓVIL
-  window.toggleMobileMenu = function() {
-    const nav = document.getElementById('mainNav');
-    if (nav) nav.classList.toggle('hidden');
-  };
-
-  window.closeMobileMenu = function() {
-    const nav = document.getElementById('mainNav');
-    if (nav && window.innerWidth < 640) nav.classList.add('hidden');
   };
 
   // ==============================================================
@@ -226,18 +231,24 @@
   function getSessionSelectorHtml(sessionId) {
     return `
       <!-- SELECTOR RÁPIDO DE SESIÓN -->
-      <div class="flex items-center justify-between border-b border-executive-200 dark:border-executive-800 pb-3">
-        <div class="flex items-center gap-1.5 overflow-x-auto text-xs py-1">
-          <span class="text-executive-400 font-mono text-[11px] mr-1">Ir a:</span>
-          ${['s1', 's2', 's3', 's4', 's5', 's6', 's7'].map(sId => `
-            <button onclick="renderSession('${sId}')" 
-              class="px-2.5 py-1 rounded text-xs font-semibold ${sId === sessionId ? 'bg-executive-900 dark:bg-executive-100 text-white dark:text-executive-900 shadow-sm' : 'bg-executive-100 dark:bg-executive-800 text-executive-600 dark:text-executive-300 hover:bg-executive-200 dark:hover:bg-executive-700'} transition">
-              S${sId.replace('s', '')}
-            </button>
-          `).join('')}
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 border-b border-executive-200 dark:border-executive-800 pb-3">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 w-full sm:w-auto">
+          <span class="text-executive-600 dark:text-executive-400 text-xs sm:text-sm font-semibold mr-0.5 shrink-0">Ir a:</span>
+          <div class="flex items-center gap-1.5 flex-nowrap sm:flex-wrap">
+            ${['s1', 's2', 's3', 's4', 's5', 's6', 's7'].map(sId => {
+              const isActive = sId === sessionId;
+              return `
+                <button onclick="renderSession('${sId}')" 
+                  class="min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg text-sm font-bold flex items-center justify-center shrink-0 transition ${isActive ? 'bg-blue-600 text-white dark:bg-blue-600 dark:text-white shadow-sm' : 'bg-executive-100 dark:bg-executive-800 text-executive-700 dark:text-executive-300 hover:bg-executive-200 dark:hover:bg-executive-700'}"
+                  aria-label="Ir a Sesión ${sId.replace('s', '')}">
+                  S${sId.replace('s', '')}
+                </button>
+              `;
+            }).join('')}
+          </div>
         </div>
-        <button onclick="window.print()" class="hidden sm:inline-flex items-center gap-1 text-xs text-executive-500 hover:text-executive-900 dark:hover:text-white" title="Imprimir hoja resumen">
-          🖨️ Hoja Imprimible
+        <button onclick="window.print()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-lg border border-executive-200 dark:border-executive-800 text-xs font-medium text-executive-600 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-800 shrink-0" title="Imprimir hoja resumen">
+          <span>🖨️</span> Hoja Imprimible
         </button>
       </div>
     `;
@@ -250,12 +261,13 @@
         ${getSessionSelectorHtml(sId)}
 
         <!-- ENCABEZADO SESIÓN (SECCIÓN 0: CABECERA PEDAGÓGICA) -->
-        <header id="sec-${sId}-header" class="scroll-mt-24 space-y-4 border-b border-executive-200 dark:border-executive-800 pb-6">
-          <div class="flex flex-wrap items-center gap-2 text-xs font-mono uppercase tracking-wider text-executive-500 font-bold">
-            <span>Sesión Oficial CB05</span> &middot; 
-            <span>Semana ${data.number}</span> &middot; 
-            <span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-bold">${data.shortTitle || data.title}</span> &middot;
-            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-semibold font-sans">⏱️ ${data.header.readingTime || '12 min de lectura pausada'}</span>
+        <header id="sec-${sId}-header" class="scroll-mt-20 space-y-4 border-b border-executive-200 dark:border-executive-800 pb-6">
+          <div class="flex flex-wrap items-center gap-2 text-[14px] sm:text-[15px] font-medium text-executive-700 dark:text-executive-300">
+            <span class="font-bold text-executive-900 dark:text-white">Sesión ${data.number || sId.replace('s', '')} &middot; Semana ${data.number || sId.replace('s', '')}</span>
+            <span class="text-executive-400">&middot;</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 font-semibold text-xs sm:text-[14px]">${data.shortTitle || data.title}</span>
+            <span class="text-executive-400">&middot;</span>
+            <span class="px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-semibold text-xs sm:text-[14px]">⏱️ Lectura: ~${data.header && data.header.readingTime ? data.header.readingTime.replace(/de lectura pausada/gi, '').trim() : '12 min'}</span>
           </div>
 
           <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-executive-900 dark:text-white">${data.title}</h2>
@@ -672,12 +684,12 @@
             <!-- NAVEGACIÓN INFERIOR DE SESIONES -->
             <div class="pt-8 border-t border-executive-200 dark:border-executive-800 flex flex-wrap items-center justify-between gap-4">
               ${data.number > 1 ? `
-                <button onclick="renderSession('s${data.number - 1}')" class="px-4 py-2.5 rounded-lg border border-executive-300 dark:border-executive-700 text-executive-700 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-800 text-xs sm:text-sm font-semibold transition">
+                <button onclick="renderSession('s${data.number - 1}')" class="px-4 py-2.5 min-h-[44px] rounded-lg border border-executive-300 dark:border-executive-700 text-executive-700 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-800 text-xs sm:text-sm font-semibold transition flex items-center justify-center">
                   &larr; Sesión Anterior (S${data.number - 1})
                 </button>
               ` : `<div></div>`}
               ${data.number < 7 ? `
-                <button onclick="renderSession('s${data.number + 1}')" class="px-5 py-2.5 rounded-lg bg-executive-900 dark:bg-executive-100 text-white dark:text-executive-900 text-xs sm:text-sm font-bold hover:opacity-90 transition shadow-xs">
+                <button onclick="renderSession('s${data.number + 1}')" class="px-5 py-2.5 min-h-[44px] rounded-lg bg-executive-900 dark:bg-executive-100 text-white dark:text-executive-900 text-xs sm:text-sm font-bold hover:opacity-90 transition shadow-xs flex items-center justify-center">
                   Siguiente Sesión (S${data.number + 1}) &rarr;
                 </button>
               ` : `<div></div>`}
@@ -715,7 +727,11 @@
           ${getSessionSelectorHtml(sessionId)}
 
           <header class="border-b border-executive-200 dark:border-executive-800 pb-6 space-y-2">
-            <span class="text-xs font-mono uppercase tracking-wider text-executive-500">Sesión 4 &middot; Hito Práctico</span>
+            <div class="flex flex-wrap items-center gap-2 text-[14px] sm:text-[15px] font-medium text-executive-700 dark:text-executive-300">
+              <span class="font-bold text-executive-900 dark:text-white">Sesión 4 &middot; Semana 4</span>
+              <span class="text-executive-400">&middot;</span>
+              <span class="px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 font-semibold text-xs sm:text-[14px]">Hito Práctico (PC1)</span>
+            </div>
             <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-executive-900 dark:text-white">${data.title}</h2>
             <p class="text-sm text-executive-600 dark:text-executive-300">${data.description}</p>
           </header>

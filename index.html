@@ -117,63 +117,72 @@
   <!-- ============================================================== -->
   <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
   <!-- ============================================================== -->
-  <header class="sticky top-0 z-50 w-full border-b border-executive-200 dark:border-executive-800 bg-white/95 dark:bg-[#0b1120]/95 backdrop-blur-sm px-3 sm:px-8 py-2.5 sm:py-3">
-    <div class="w-full flex flex-col gap-2">
+  <!-- ============================================================== -->
+  <!-- CABECERA SUPERIOR (NO STICKY: SE DESPLAZA AL HACER SCROLL) -->
+  <!-- ============================================================== -->
+  <header class="w-full border-b border-executive-200 dark:border-executive-800 bg-white dark:bg-[#0b1120] px-3 sm:px-8 py-2 sm:py-2.5 transition-colors">
+    <div class="w-full flex items-center justify-between gap-2 sm:gap-4">
       
-      <!-- FILA SUPERIOR: LOGO, SELECTOR PARCIAL/FINAL Y HERRAMIENTAS -->
-      <div class="flex items-center justify-between gap-2 sm:gap-4">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div class="w-8 h-8 rounded-lg bg-executive-900 dark:bg-executive-100 text-white dark:text-executive-900 flex items-center justify-center font-bold text-xs tracking-tight shrink-0">
-            CB05
-          </div>
-          <div class="min-w-0">
-            <span class="text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold text-executive-500 dark:text-executive-400 truncate block">Procesos de Ciberseguridad &middot; UPC</span>
-            <h1 class="text-xs sm:text-sm font-bold text-executive-900 dark:text-white leading-tight truncate">Guía de Estudio (CB05)</h1>
-          </div>
+      <!-- LOGO Y TÍTULO COMPACTO -->
+      <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-executive-900 dark:bg-executive-100 text-white dark:text-executive-900 flex items-center justify-center font-bold text-xs tracking-tight shrink-0">
+          CB05
         </div>
-
-        <div class="flex items-center gap-2 shrink-0">
-          <!-- SELECTOR DE ETAPA: PARCIAL (ACTIVO) / FINAL (PREPARADO) -->
-          <div class="hidden md:flex items-center rounded-lg border border-executive-200 dark:border-executive-800 p-0.5 bg-executive-100/80 dark:bg-executive-900 text-xs font-semibold">
-            <span class="px-2.5 py-1 rounded-md bg-white dark:bg-executive-800 text-executive-900 dark:text-white shadow-xs cursor-default">
-              Parcial (S1–S7)
-            </span>
-            <span class="px-2.5 py-1 rounded-md text-executive-400 dark:text-executive-500 cursor-not-allowed opacity-60" title="Final (S9–S15) se habilitará tras la semana 8">
-              Final (S9–S15)
-            </span>
-          </div>
-
-          <!-- CONTROL DE TEMA -->
-          <button id="themeToggle" class="px-2 sm:px-3 py-1.5 rounded-lg border border-executive-200 dark:border-executive-800 text-executive-700 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-850 transition text-xs font-medium flex items-center gap-1.5" title="Cambiar tema visual">
-            <span id="themeIcon">🌙</span>
-            <span id="themeLabel">Modo Oscuro</span>
-          </button>
-          
-          <!-- BOTÓN MENÚ MÓVIL (HAMBURGUESA) -->
-          <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="sm:hidden p-2 rounded-lg border border-executive-200 dark:border-executive-800 text-executive-700 dark:text-executive-300" aria-label="Abrir menú">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-          </button>
+        <div class="min-w-0">
+          <span class="text-[10px] uppercase tracking-wider font-semibold text-executive-500 dark:text-executive-400 block truncate sm:hidden">UPC &middot; Ciberseguridad</span>
+          <span class="text-[11px] uppercase tracking-wider font-semibold text-executive-500 dark:text-executive-400 hidden sm:block truncate">Procesos de Ciberseguridad &middot; UPC</span>
+          <h1 class="text-xs sm:text-sm font-bold text-executive-900 dark:text-white leading-tight truncate">Guía de Estudio CB05</h1>
         </div>
       </div>
 
-      <!-- FILA INFERIOR: BARRA DE NAVEGACIÓN LIMPIA (4 ENTRADAS) -->
-      <nav id="mainNav" class="hidden sm:flex flex-col sm:flex-row sm:items-center gap-1.5 pt-1 text-xs font-semibold text-executive-600 dark:text-executive-300">
-        <button onclick="navigateTo('view-session', 's1'); closeMobileMenu();" id="nav-view-session" class="nav-btn text-left sm:text-center px-3 py-1.5 rounded-lg hover:bg-executive-100 dark:hover:bg-executive-800 transition">
-          📚 Sesiones (S1–S7)
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- SELECTOR DE ETAPA: PARCIAL (ACTIVO) / FINAL (OCULTO EN CELULAR HASTA QUE EXISTA) -->
+        <div class="hidden md:flex items-center rounded-lg border border-executive-200 dark:border-executive-800 p-0.5 bg-executive-100/80 dark:bg-executive-900 text-xs font-semibold">
+          <span class="px-2.5 py-1 rounded-md bg-white dark:bg-executive-800 text-executive-900 dark:text-white shadow-xs cursor-default">
+            Parcial (S1–S7)
+          </span>
+          <span class="px-2.5 py-1 rounded-md text-executive-400 dark:text-executive-500 cursor-not-allowed opacity-60" title="Final (S9–S15) se habilitará tras la semana 8">
+            Final (S9–S15)
+          </span>
+        </div>
+
+        <!-- CONTROL DE TEMA (SOLO ICONO EN CELULAR, TEXTO EN ESCRITORIO) -->
+        <button id="themeToggle" class="min-h-[44px] min-w-[44px] sm:min-w-0 px-2 sm:px-3 py-2 rounded-lg border border-executive-200 dark:border-executive-800 text-executive-700 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-850 transition text-xs font-medium flex items-center justify-center gap-1.5 shrink-0" title="Cambiar tema visual" aria-label="Cambiar tema visual">
+          <span id="themeIcon" class="text-base sm:text-sm">🌙</span>
+          <span id="themeLabel" class="hidden sm:inline">Modo Oscuro</span>
         </button>
-        <button onclick="navigateTo('view-detective'); closeMobileMenu();" id="nav-view-detective" class="nav-btn text-left sm:text-center px-3 py-1.5 rounded-lg hover:bg-executive-100 dark:hover:bg-executive-800 transition">
-          🔍 Detective de Categorías
-        </button>
-        <button onclick="navigateTo('view-raci'); closeMobileMenu();" id="nav-view-raci" class="nav-btn text-left sm:text-center px-3 py-1.5 rounded-lg hover:bg-executive-100 dark:hover:bg-executive-800 transition">
-          📊 Matriz RACI
-        </button>
-        <button onclick="navigateTo('view-reference'); closeMobileMenu();" id="nav-view-reference" class="nav-btn text-left sm:text-center px-3 py-1.5 rounded-lg hover:bg-executive-100 dark:hover:bg-executive-800 transition">
-          📖 Marcos de referencia
-        </button>
-      </nav>
+      </div>
 
     </div>
   </header>
+
+  <!-- ============================================================== -->
+  <!-- BARRA DE PESTAÑAS STICKY (QUEDA FIJA ARRIBA AL HACER SCROLL) -->
+  <!-- ============================================================== -->
+  <nav id="mainNav" class="sticky top-0 z-40 w-full border-b border-executive-200 dark:border-executive-800 bg-white/95 dark:bg-[#0b1120]/95 backdrop-blur-sm px-2 sm:px-8 py-1.5 sm:py-2">
+    <div class="w-full grid grid-cols-4 gap-1 sm:gap-2 text-xs font-semibold">
+      <button onclick="navigateTo('view-session', 's1')" id="nav-view-session" class="nav-btn bg-blue-600 text-white dark:bg-blue-600 dark:text-white font-bold shadow-sm flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 sm:px-3 rounded-lg min-h-[44px] transition text-center" aria-label="Sesiones">
+        <span class="text-sm sm:text-base shrink-0">📚</span>
+        <span class="inline sm:hidden truncate">Sesiones</span>
+        <span class="hidden sm:inline truncate">Sesiones (S1–S7)</span>
+      </button>
+      <button onclick="navigateTo('view-detective')" id="nav-view-detective" class="nav-btn text-executive-600 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-800 flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 sm:px-3 rounded-lg min-h-[44px] transition text-center" aria-label="Detective">
+        <span class="text-sm sm:text-base shrink-0">🔍</span>
+        <span class="inline sm:hidden truncate">Detective</span>
+        <span class="hidden sm:inline truncate">Detective de Categorías</span>
+      </button>
+      <button onclick="navigateTo('view-raci')" id="nav-view-raci" class="nav-btn text-executive-600 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-800 flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 sm:px-3 rounded-lg min-h-[44px] transition text-center" aria-label="RACI">
+        <span class="text-sm sm:text-base shrink-0">⚖️</span>
+        <span class="inline sm:hidden truncate">RACI</span>
+        <span class="hidden sm:inline truncate">Matriz RACI</span>
+      </button>
+      <button onclick="navigateTo('view-reference')" id="nav-view-reference" class="nav-btn text-executive-600 dark:text-executive-300 hover:bg-executive-100 dark:hover:bg-executive-800 flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 sm:px-3 rounded-lg min-h-[44px] transition text-center" aria-label="Marcos">
+        <span class="text-sm sm:text-base shrink-0">🛡️</span>
+        <span class="inline sm:hidden truncate">Marcos</span>
+        <span class="hidden sm:inline truncate">Marcos de referencia</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- ============================================================== -->
   <!-- CONTENEDORES DE VISTA DINÁMICOS (ANCHO COMPLETO FLUIDO) -->
